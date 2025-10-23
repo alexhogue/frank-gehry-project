@@ -1,0 +1,300 @@
+/* Frank Gehry Digital Art Piece - CSS */
+
+/* CSS Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+}
+
+/* Art Container */
+.art-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    background-color: #313131;
+}
+
+/* Background Content */
+.background-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    padding: 20px;
+}
+
+.main-text {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    width: 280px;
+    color: white;
+    font-size: 12px;
+    line-height: 1.3;
+    z-index: 2;
+    font-weight: 400;
+}
+
+.award-text {
+    position: absolute;
+    top: 45%;
+    left: 45%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    color: white;
+    text-align: center;
+    z-index: 2;
+}
+
+.award-text h2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    line-height: 1.2;
+}
+
+.award-text p {
+    font-size: 12px;
+    margin: 3px 0;
+    line-height: 1.2;
+}
+
+.name-text {
+    position: absolute;
+    bottom: 80px;
+    right: 80px;
+    color: white;
+    z-index: 2;
+    transform: rotate(-15deg);
+}
+
+.name-text h1 {
+    font-size: 36px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    line-height: 1;
+}
+
+/* Interactive Geometric Shapes */
+.shape {
+    position: absolute;
+    cursor: pointer;
+    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 10;
+}
+
+.shape:hover {
+    transform: scale(1.05);
+}
+
+/* Dark Red Trapezoid */
+.dark-red-trapezoid {
+    background-color: #8B0000;
+    width: 1000px;
+    height: 1200px;
+    bottom: -10vw;
+    left: 30vw;
+    transform: rotate(-185deg);
+    clip-path: polygon(0 16%, 66% 18%, 100% 88%, 6% 100%);
+}
+
+/* Bright Blue Rectangle */
+.bright-blue-rectangle {
+    background-color: #0066CC;
+    width: 40vw;
+    height: 90vh;
+    top: 0;
+    left: 0;
+}
+
+/* Orange Polygon */
+.orange-polygon {
+    background-color: #FF6600;
+    width: 1000px;
+    height: 1000px;
+    top: 0;
+    right: 0;
+    clip-path: polygon(44% 0, 100% 0, 100% 88%, 0 100%)
+}
+
+/* Dark Green Quarter Circle */
+.dark-green-quarter-circle {
+    background-color: #006600;
+    width: 800px;
+    height: 800px;
+    bottom: 0;
+    right: 0;
+    border-radius: 100% 0 0 0;
+}
+
+/* Small Blue Diamond */
+.small-blue-triangle {
+    background-color: #FF6600;
+    width: 1000px;
+    height: 1000px;
+    bottom: -20vh;
+    left: -20vw;
+    clip-path: polygon(100% 0, 100% 0, 79% 100%, 0 51%);
+    transform: rotate(45deg);
+}
+
+/* Animation Classes for Shape Movement */
+.shape.moved-out {
+    opacity: 0;
+}
+
+.shape.moved-out[data-direction="top-left"] {
+    transform: translate(-100vw, -100vh) rotate(-15deg);
+}
+
+.shape.moved-out[data-direction="left"] {
+    transform: translateX(-100vw);
+}
+
+.shape.moved-out[data-direction="top"] {
+    transform: translateY(-100vh);
+}
+
+.shape.moved-out[data-direction="bottom-right"] {
+    transform: translate(100vw, 100vh);
+}
+
+.shape.moved-out[data-direction="top-right"] {
+    transform: translate(100vw, -100vh) rotate(45deg);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .art-container {
+        height: 100vh;
+    }
+    
+    .main-text {
+        width: 220px;
+        font-size: 10px;
+        top: 15px;
+        left: 15px;
+    }
+    
+    .award-text h2 {
+        font-size: 16px;
+    }
+    
+    .award-text p {
+        font-size: 10px;
+    }
+    
+    .name-text h1 {
+        font-size: 28px;
+    }
+    
+    .dark-red-trapezoid {
+        width: 280px;
+        height: 200px;
+        top: 140px;
+        left: 140px;
+    }
+    
+    .bright-blue-rectangle {
+        width: 140px;
+        height: 100vh;
+    }
+    
+    .orange-polygon {
+        width: 220px;
+        height: 140px;
+        left: 180px;
+    }
+    
+    .dark-green-quarter-circle {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .small-blue-diamond {
+        width: 50px;
+        height: 50px;
+        top: 280px;
+        left: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .background-content {
+        padding: 15px;
+    }
+    
+    .main-text {
+        width: 180px;
+        font-size: 9px;
+        top: 10px;
+        left: 10px;
+    }
+    
+    .award-text h2 {
+        font-size: 14px;
+    }
+    
+    .award-text p {
+        font-size: 9px;
+    }
+    
+    .name-text h1 {
+        font-size: 22px;
+    }
+    
+    .dark-red-trapezoid {
+        width: 220px;
+        height: 160px;
+        top: 100px;
+        left: 100px;
+    }
+    
+    .bright-blue-rectangle {
+        width: 110px;
+        height: 100vh;
+    }
+    
+    .orange-polygon {
+        width: 180px;
+        height: 110px;
+        left: 140px;
+    }
+    
+    .dark-green-quarter-circle {
+        width: 180px;
+        height: 180px;
+    }
+    
+    .small-blue-diamond {
+        width: 40px;
+        height: 40px;
+        top: 220px;
+        left: 180px;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    .shape {
+        transition: none;
+    }
+    
+    .shape.moved-out {
+        transition: none;
+    }
+}
+
+/* Focus styles for accessibility */
+.shape:focus {
+    outline: 3px solid #FFD700;
+    outline-offset: 2px;
+}
