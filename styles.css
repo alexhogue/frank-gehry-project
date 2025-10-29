@@ -46,9 +46,10 @@ body {
 
 .award-text {
     position: absolute;
-    top: 45%;
-    left: 45%;
-    transform: translate(-50%, -50%) rotate(-15deg);
+    top: 72%;
+    left: 60%;
+    transform: translate(-50%, -50%);
+    transform: rotate(-18.5deg);
     color: white;
     text-align: center;
     z-index: 2;
@@ -69,11 +70,12 @@ body {
 
 .name-text {
     position: absolute;
-    bottom: 80px;
-    right: 80px;
+    top: 28%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+    transform: rotate(-28deg);
     color: white;
     z-index: 2;
-    transform: rotate(-15deg);
 }
 
 .name-text h1 {
@@ -89,6 +91,25 @@ body {
     cursor: pointer;
     transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     z-index: 10;
+    opacity: 0.85;
+    transform: rotate(45deg);
+    /* Render parent in the original color (set via `color` on each shape) */
+    background-color: currentColor;
+}
+
+/* Inner fill creates a "stroke" effect that works with clip-path and border-radius */
+.shape::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: black;
+    /* Inherit geometric shape */
+    clip-path: inherit;
+    border-radius: inherit;
+    /* Scale down slightly to reveal colored border from parent */
+    transform: scale(0.96);
+    transform-origin: center;
+    z-index: 0;
 }
 
 .shape:hover {
@@ -97,27 +118,30 @@ body {
 
 /* Dark Red Trapezoid */
 .dark-red-trapezoid {
-    background-color: #8B0000;
+    color: #8B0000;
     width: 1000px;
-    height: 1200px;
+    height: 1000px;
     bottom: -10vw;
     left: 30vw;
     transform: rotate(-185deg);
-    clip-path: polygon(0 16%, 66% 18%, 100% 88%, 6% 100%);
+    /* Clean, symmetric trapezoid to avoid odd skewing */
+    clip-path: polygon(0 20%, 100% 0, 85% 80%, 20% 100%);
 }
 
 /* Bright Blue Rectangle */
 .bright-blue-rectangle {
-    background-color: #0066CC;
+    color: #0066CC;
     width: 40vw;
     height: 90vh;
+    opacity: 0.9;
     top: 0;
     left: 0;
 }
 
 /* Orange Polygon */
 .orange-polygon {
-    background-color: #FF6600;
+    color: #FF6600;
+    opacity: 0.9;
     width: 1000px;
     height: 1000px;
     top: 0;
@@ -127,23 +151,69 @@ body {
 
 /* Dark Green Quarter Circle */
 .dark-green-quarter-circle {
-    background-color: #006600;
+    color: #006600;
     width: 800px;
     height: 800px;
+    border-width: 4px;
+    stroke-width: 4px;
+    stroke: #006600;
     bottom: 0;
+    opacity: 0.9;
     right: 0;
     border-radius: 100% 0 0 0;
 }
 
 /* Small Blue Diamond */
 .small-blue-triangle {
-    background-color: #FF6600;
+    color: #FF6600;
     width: 1000px;
     height: 1000px;
     bottom: -20vh;
     left: -20vw;
     clip-path: polygon(100% 0, 100% 0, 79% 100%, 0 51%);
     transform: rotate(45deg);
+}
+
+/* Additional background shapes */
+.green-semi-circle {
+    color: #006600;
+    width: 1000px;
+    height: 800px;
+    bottom: -10vh;
+    left: -15vw;
+    border-radius: 400px 400px 0 0;
+    transform: rotate(-20deg);
+}
+
+.green-square {
+    color: #006600;
+    width: 1000px;
+    height: 800px;
+    top: -15vh;
+    left: 30vw;
+    transform: rotate(30deg);
+}
+
+.red-triangle {
+    color: #8B0000;
+    border-width: 4px;
+    width: 900px;
+    height: 900px;
+    top: 25vh;
+    right: -20vw;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    transform: rotate(-45deg);
+}
+
+.orange-trapezoid {
+    color: #FF6600;
+    width: 700px;
+    height: 500px;
+    bottom: -5vh;
+    right: 20vw;
+    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+    opacity: 0.9;
+    transform: rotate(15deg);
 }
 
 /* Animation Classes for Shape Movement */

@@ -98,7 +98,7 @@ function setupKeyboardControls() {
 function setupResetFunctionality() {
     // Add reset button (optional - can be removed if not desired)
     const resetButton = document.createElement('button');
-    resetButton.textContent = 'Reset (R)';
+    resetButton.textContent = 'Reset';
     resetButton.style.cssText = `
         position: fixed;
         top: 20px;
