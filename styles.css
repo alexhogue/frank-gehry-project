@@ -2,369 +2,304 @@
 
 /* CSS Reset and Base Styles */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    overflow: hidden;
-    height: 100vh;
+  font-family: "Arial", sans-serif;
+  overflow: hidden;
+  height: 100vh;
 }
 
 /* Art Container */
 .art-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    background-color: #313131;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background-color: #313131;
 }
 
 /* Background Content */
 .background-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  padding: 20px;
+}
+
+.sketch {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+img {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-    padding: 20px;
+    max-width: 80%;
+    max-height: 80%;
+    z-index: 5;
+}
+
+#frank-g {
+    transform: scale(0.5);
+    top: 30%;
+    left:10.9%;
+    
+}
+
+#ehry {
+    transform: scale(0.22);
+    top: 10.5%;
+    left:-25%
 }
 
 .main-text {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    width: 280px;
-    color: white;
-    font-size: 12px;
-    line-height: 1.3;
-    z-index: 2;
-    font-weight: 400;
-}
-
-.award-text {
-    position: absolute;
-    top: 72%;
-    left: 60%;
-    transform: translate(-50%, -50%);
-    transform: rotate(-18.5deg);
-    color: white;
-    text-align: center;
-    z-index: 2;
-}
-
-.award-text h2 {
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    line-height: 1.2;
-}
-
-.award-text p {
-    font-size: 12px;
-    margin: 3px 0;
-    line-height: 1.2;
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 280px;
+  color: white;
+  font-size: 12px;
+  line-height: 1.3;
+  z-index: 2;
+  font-weight: 400;
 }
 
 .name-text {
-    position: absolute;
-    top: 28%;
-    left: 40%;
-    transform: translate(-50%, -50%);
-    transform: rotate(-28deg);
-    color: white;
-    z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  transform: translate(-50%, -50%);
+  transform: rotate(-29deg);
+  color: white;
+  z-index: 2;
 }
 
 .name-text h1 {
-    font-size: 36px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    line-height: 1;
+  font-size: 36px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  line-height: 1;
 }
 
 /* Interactive Geometric Shapes */
 .shape {
-    position: absolute;
-    cursor: pointer;
-    transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    z-index: 10;
-    opacity: 0.85;
-    transform: rotate(45deg);
-    /* Render parent in the original color (set via `color` on each shape) */
-    background-color: currentColor;
+  position: absolute;
+  cursor: pointer;
+  transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 10;
+  opacity: 0.85;
+  transform: rotate(45deg);
+  /* Render parent in the original color (set via `color` on each shape) */
+  background-color: currentColor;
 }
 
 /* Inner fill creates a "stroke" effect that works with clip-path and border-radius */
 .shape::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: black;
-    /* Inherit geometric shape */
-    clip-path: inherit;
-    border-radius: inherit;
-    /* Scale down slightly to reveal colored border from parent */
-    transform: scale(0.96);
-    transform-origin: center;
-    z-index: 0;
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(17, 17, 17);
+  /* Inherit geometric shape */
+  clip-path: inherit;
+  border-radius: inherit;
+  /* Scale down slightly to reveal colored border from parent */
+  transform: scale(0.96);
+  transform-origin: center;
+  z-index: 0;
 }
 
 .shape:hover {
-    transform: scale(1.05);
+  transform: scale(1.05);
 }
 
 /* Dark Red Trapezoid */
 .dark-red-trapezoid {
-    color: #8B0000;
-    width: 1000px;
-    height: 1000px;
-    bottom: -10vw;
-    left: 30vw;
-    transform: rotate(-185deg);
-    /* Clean, symmetric trapezoid to avoid odd skewing */
-    clip-path: polygon(0 20%, 100% 0, 85% 80%, 20% 100%);
+  color: #8b0000;
+  width: 65vw;
+  height: 70vw;
+  bottom: -10vw;
+  left: 30vw;
+  transform: rotate(-185deg);
+  clip-path: polygon(0 20%, 100% 0, 85% 80%, 20% 100%);
+}
+
+.award-text {
+  position: absolute;
+  top: 72%;
+  left: 60%;
+  transform: translate(-50%, -50%);
+  transform: rotate(-18.5deg);
+  color: white;
+  text-align: center;
+  z-index: 2;
+}
+
+.award-text h2 {
+  font-size: 1.2vw;
+  font-weight: bold;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.award-text p {
+  font-size: 1vw;
+  margin: 3px 0;
+  line-height: 1.2;
 }
 
 /* Bright Blue Rectangle */
 .bright-blue-rectangle {
-    color: #0066CC;
-    width: 40vw;
-    height: 90vh;
-    opacity: 0.9;
-    top: 0;
-    left: 0;
+  color: #0066cc;
+  width: 40vw;
+  height: 90vh;
+  opacity: 0.9;
+  top: 0;
+  left: 0;
+}
+
+#sketch1-p1{
+    transform: scale(1.25);
+    left:4.75%;
+    top: 30%;
+}
+#sketch-desc1{
+    transform: scale(0.75);
+    top: 60%;
+    left: 5%;
+}
+
+#sketch-desc1{
+
 }
 
 /* Orange Polygon */
 .orange-polygon {
-    color: #FF6600;
-    opacity: 0.9;
-    width: 1000px;
-    height: 1000px;
-    top: 0;
-    right: 0;
-    clip-path: polygon(44% 0, 100% 0, 100% 88%, 0 100%)
+  color: #ff6600;
+  opacity: 0.9;
+  width: 60vw;
+  height: 80vw;
+  top: 0;
+  right: 0;
+  clip-path: polygon(44% 0, 100% 0, 100% 88%, 0 100%);
 }
 
 /* Dark Green Quarter Circle */
 .dark-green-quarter-circle {
-    color: #006600;
-    width: 800px;
-    height: 800px;
-    border-width: 4px;
-    stroke-width: 4px;
-    stroke: #006600;
-    bottom: 0;
-    opacity: 0.9;
-    right: 0;
-    border-radius: 100% 0 0 0;
+  color: #006600;
+  width: 75vw;
+  height: 68vw;
+  border-width: 4px;
+  stroke-width: 4px;
+  stroke: #006600;
+  bottom: 0;
+  opacity: 0.9;
+  right: 0;
+  border-radius: 100% 0 0 0;
+}
+
+#f2{
+    left: 3.2%;
+    top:30%;
+    transform: scale(.2);
+}
+
+#f1{
+   left: 69.5%;
+   top:31.5%; 
+   transform: scale(.4);
+}
+
+#text1 {
+    transform: scale(0.5);
+    left: 2.5%;
+    top: 55.65%;
 }
 
 /* Small Blue Diamond */
-.small-blue-triangle {
-    color: #FF6600;
-    width: 1000px;
-    height: 1000px;
-    bottom: -20vh;
-    left: -20vw;
-    clip-path: polygon(100% 0, 100% 0, 79% 100%, 0 51%);
-    transform: rotate(45deg);
+.main-orange-triangle {
+  color: #ff6600;
+  width: 60vw;
+  height: 70vw;
+  bottom: -20vh;
+  left: -10vw;
+  clip-path: polygon(100% 18%, 0 63%, 73% 100%);
 }
 
 /* Additional background shapes */
 .green-semi-circle {
-    color: #006600;
-    width: 1000px;
-    height: 800px;
-    bottom: -10vh;
-    left: -15vw;
-    border-radius: 400px 400px 0 0;
-    transform: rotate(-20deg);
+  color: #006600;
+  width: 60vw;
+  height: 50vw;
+  bottom: -10vh;
+  left: -15vw;
+  border-radius: 400px 400px 0 0;
+  transform: rotate(-20deg);
 }
 
 .green-square {
-    color: #006600;
-    width: 1000px;
-    height: 800px;
-    top: -15vh;
-    left: 30vw;
-    transform: rotate(30deg);
+  color: #006600;
+  width: 60vw;
+  height: 80vw;
+  top: -15vh;
+  left: 30vw;
+  transform: rotate(30deg);
 }
 
 .red-triangle {
-    color: #8B0000;
-    border-width: 4px;
-    width: 900px;
-    height: 900px;
-    top: 25vh;
-    right: -20vw;
-    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-    transform: rotate(-45deg);
+  color: #8b0000;
+  border-width: 4px;
+  width: 50vw;
+  height: 70vw;
+  top: 25vh;
+  right: -20vw;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  transform: rotate(-45deg);
 }
 
 .orange-trapezoid {
-    color: #FF6600;
-    width: 700px;
-    height: 500px;
-    bottom: -5vh;
-    right: 20vw;
-    clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
-    opacity: 0.9;
-    transform: rotate(15deg);
+  color: #ff6600;
+  width: 40vw;
+  height: 20vw;
+  bottom: -5vh;
+  right: 20vw;
+  clip-path: polygon(20% 0%, 80% 0%, 100% 100%, 0% 100%);
+  opacity: 0.9;
+  transform: rotate(15deg);
 }
 
 /* Animation Classes for Shape Movement */
 .shape.moved-out {
-    opacity: 0;
+  opacity: 0;
 }
 
 .shape.moved-out[data-direction="top-left"] {
-    transform: translate(-100vw, -100vh) rotate(-15deg);
+  transform: translate(-100vw, -100vh) rotate(-15deg);
 }
 
 .shape.moved-out[data-direction="left"] {
-    transform: translateX(-100vw);
+  transform: translateX(-100vw);
 }
 
 .shape.moved-out[data-direction="top"] {
-    transform: translateY(-100vh);
+  transform: translateY(-100vh);
 }
 
 .shape.moved-out[data-direction="bottom-right"] {
-    transform: translate(100vw, 100vh);
+  transform: translate(100vw, 100vh);
 }
 
 .shape.moved-out[data-direction="top-right"] {
-    transform: translate(100vw, -100vh) rotate(45deg);
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .art-container {
-        height: 100vh;
-    }
-    
-    .main-text {
-        width: 220px;
-        font-size: 10px;
-        top: 15px;
-        left: 15px;
-    }
-    
-    .award-text h2 {
-        font-size: 16px;
-    }
-    
-    .award-text p {
-        font-size: 10px;
-    }
-    
-    .name-text h1 {
-        font-size: 28px;
-    }
-    
-    .dark-red-trapezoid {
-        width: 280px;
-        height: 200px;
-        top: 140px;
-        left: 140px;
-    }
-    
-    .bright-blue-rectangle {
-        width: 140px;
-        height: 100vh;
-    }
-    
-    .orange-polygon {
-        width: 220px;
-        height: 140px;
-        left: 180px;
-    }
-    
-    .dark-green-quarter-circle {
-        width: 220px;
-        height: 220px;
-    }
-    
-    .small-blue-diamond {
-        width: 50px;
-        height: 50px;
-        top: 280px;
-        left: 250px;
-    }
-}
-
-@media (max-width: 480px) {
-    .background-content {
-        padding: 15px;
-    }
-    
-    .main-text {
-        width: 180px;
-        font-size: 9px;
-        top: 10px;
-        left: 10px;
-    }
-    
-    .award-text h2 {
-        font-size: 14px;
-    }
-    
-    .award-text p {
-        font-size: 9px;
-    }
-    
-    .name-text h1 {
-        font-size: 22px;
-    }
-    
-    .dark-red-trapezoid {
-        width: 220px;
-        height: 160px;
-        top: 100px;
-        left: 100px;
-    }
-    
-    .bright-blue-rectangle {
-        width: 110px;
-        height: 100vh;
-    }
-    
-    .orange-polygon {
-        width: 180px;
-        height: 110px;
-        left: 140px;
-    }
-    
-    .dark-green-quarter-circle {
-        width: 180px;
-        height: 180px;
-    }
-    
-    .small-blue-diamond {
-        width: 40px;
-        height: 40px;
-        top: 220px;
-        left: 180px;
-    }
-}
-
-/* Accessibility */
-@media (prefers-reduced-motion: reduce) {
-    .shape {
-        transition: none;
-    }
-    
-    .shape.moved-out {
-        transition: none;
-    }
+  transform: translate(100vw, -100vh) rotate(45deg);
 }
 
 /* Focus styles for accessibility */
 .shape:focus {
-    outline: 3px solid #FFD700;
-    outline-offset: 2px;
+  outline: 3px solid #ffd700;
+  outline-offset: 2px;
 }
