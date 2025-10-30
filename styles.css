@@ -150,6 +150,7 @@ img {
 .award-text p {
   font-size: 1vw;
   margin: 3px 0;
+  font-weight: 200;
   line-height: 1.2;
 }
 
@@ -165,8 +166,8 @@ img {
 
 #sketch1-p1{
     transform: scale(1.25);
-    left:4.75%;
-    top: 30%;
+    left:5%;
+    top: 30.2%;
 }
 #sketch-desc1{
     transform: scale(0.75);
@@ -174,19 +175,16 @@ img {
     left: 5%;
 }
 
-#sketch-desc1{
-
-}
 
 /* Orange Polygon */
 .orange-polygon {
   color: #ff6600;
   opacity: 0.9;
-  width: 60vw;
+  width: 100vw;
   height: 80vw;
   top: 0;
   right: 0;
-  clip-path: polygon(44% 0, 100% 0, 100% 88%, 0 100%);
+  clip-path: polygon(40% 0, 68% 0%, 100% 64%, 21% 100%, 0 100%, 0 70%);
 }
 
 /* Dark Green Quarter Circle */
@@ -202,6 +200,11 @@ img {
   right: 0;
   border-radius: 100% 0 0 0;
 }
+#sketch1-p2{
+    transform: scale(0.5);
+    top:25.2%;
+    left:-10.5%;
+}
 
 #f2{
     left: 3.2%;
@@ -210,9 +213,9 @@ img {
 }
 
 #f1{
-   left: 69.5%;
-   top:31.5%; 
-   transform: scale(.4);
+   left: 67.5%;
+   top:29.8%; 
+   transform: scale(.35);
 }
 
 #text1 {
