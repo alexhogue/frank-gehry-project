@@ -11,6 +11,7 @@ body {
   font-family: "Arial", sans-serif;
   overflow: hidden;
   height: 100vh;
+  width: 100vw;
 }
 
 /* Art Container */
@@ -18,19 +19,10 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-color: #313131;
+  background-color: #3c3c3c;
 }
 
-/* Background Content */
-.background-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  padding: 20px;
-}
+
 
 .sketch {
   top: 50%;
@@ -46,16 +38,16 @@ img {
 }
 
 #frank-g {
-    transform: scale(0.5);
-    top: 30%;
-    left:10.9%;
+    transform: scale(0.45);
+    top: 28.9%;
+    left: 11.6%;
     
 }
 
 #ehry {
     transform: scale(0.22);
     top: 10.5%;
-    left:-25%
+    left:-24.2%
 }
 
 .main-text {
@@ -122,9 +114,9 @@ img {
 .dark-red-trapezoid {
   color: #8b0000;
   width: 65vw;
-  height: 70vw;
-  bottom: -10vw;
-  left: 30vw;
+  height: 120vh;
+  bottom: -12vh;
+  left: 32vw;
   transform: rotate(-185deg);
   clip-path: polygon(0 20%, 100% 0, 85% 80%, 20% 100%);
 }
@@ -159,20 +151,19 @@ img {
   color: #0066cc;
   width: 40vw;
   height: 90vh;
-  opacity: 0.9;
   top: 0;
   left: 0;
 }
 
 #sketch1-p1{
     transform: scale(1.25);
-    left:5%;
-    top: 30.2%;
+    left:8.4%;
+    top: 31.6%;
 }
 #sketch-desc1{
     transform: scale(0.75);
-    top: 60%;
-    left: 5%;
+    top: 65%;
+    left: 7%;
 }
 
 
@@ -181,17 +172,17 @@ img {
   color: #ff6600;
   opacity: 0.9;
   width: 100vw;
-  height: 80vw;
+  height: 110vh;
   top: 0;
   right: 0;
-  clip-path: polygon(40% 0, 68% 0%, 100% 64%, 21% 100%, 0 100%, 0 70%);
+  clip-path: polygon(40% 0, 59% 0, 100% 27%, 64% 100%, 0 100%, 0 67%);
 }
 
 /* Dark Green Quarter Circle */
 .dark-green-quarter-circle {
   color: #006600;
-  width: 75vw;
-  height: 68vw;
+  width: 72vw;
+  height: 115vh;
   border-width: 4px;
   stroke-width: 4px;
   stroke: #006600;
@@ -202,43 +193,43 @@ img {
 }
 #sketch1-p2{
     transform: scale(0.5);
-    top:25.2%;
-    left:-10.5%;
+    top:24%;
+    left:-12%;
 }
 
 #f2{
-    left: 3.2%;
-    top:30%;
-    transform: scale(.2);
+    left: 7.8%;
+    top:24.2%;
+    transform: scale(.17);
 }
 
 #f1{
-   left: 67.5%;
-   top:29.8%; 
-   transform: scale(.35);
+   left: 72%;
+   top:17.8%; 
+   transform: scale(.19);
 }
 
 #text1 {
     transform: scale(0.5);
-    left: 2.5%;
-    top: 55.65%;
+    left: 1.5%;
+    top: 50%;
 }
 
 /* Small Blue Diamond */
 .main-orange-triangle {
   color: #ff6600;
-  width: 60vw;
-  height: 70vw;
-  bottom: -20vh;
+  width: 65vw;
+  height: 110vh;
+  bottom: -10vh;
   left: -10vw;
-  clip-path: polygon(100% 18%, 0 63%, 73% 100%);
+  clip-path: polygon(100% 18%, 0 70%, 68% 100%);
 }
 
 /* Additional background shapes */
 .green-semi-circle {
   color: #006600;
   width: 60vw;
-  height: 50vw;
+  height: 60vh;
   bottom: -10vh;
   left: -15vw;
   border-radius: 400px 400px 0 0;
