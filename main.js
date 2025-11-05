@@ -6,6 +6,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize the interactive art piece
     initializeArtPiece();
+    // Freeze positions to pixel values and set up scaling after layout
+    setTimeout(() => {
+        freezeCompositionPositions();
+        setupStageScaling();
+    }, 0);
+});
+
+// Also ensure everything is finalized after images/fonts load
+window.addEventListener('load', () => {
+    freezeCompositionPositions();
+    setupStageScaling();
 });
 
 // Initialize the interactive art piece
@@ -13,6 +24,53 @@ function initializeArtPiece() {
     setupShapeInteractions();
     setupKeyboardControls();
     setupResetFunctionality();
+}
+
+// Capture current layout and convert to pixel-based absolute positioning within the stage
+function freezeCompositionPositions() {
+    const stage = document.querySelector('.art-container');
+    if (!stage) return;
+    const base = stage.getBoundingClientRect();
+
+    // Exclude images - they should stay positioned relative to their parent shapes
+    const elements = stage.querySelectorAll('.shape, .award-text, .name-text, .main-text');
+    elements.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        // Position relative to the closest positioned ancestor (offsetParent)
+        const parent = el.offsetParent || stage;
+        const pref = parent.getBoundingClientRect();
+        const left = rect.left - pref.left;
+        const top = rect.top - pref.top;
+        // Preserve existing transform; only lock box metrics
+        el.style.position = 'absolute';
+        el.style.left = left + 'px';
+        el.style.top = top + 'px';
+        el.style.width = rect.width + 'px';
+        el.style.height = rect.height + 'px';
+    });
+    
+    // Don't freeze images - let them use their CSS-defined positions
+    // Images are already positioned absolutely relative to their parent shapes via CSS
+    // The freeze function would break this relationship, especially with rotated shapes
+}
+
+// Scale the fixed-size stage to fit the current viewport while preserving aspect ratio
+function setupStageScaling() {
+    const stage = document.getElementById('composition-stage');
+    if (!stage) return;
+    // Match the CSS #composition-stage baseline size
+    const DESIGN_WIDTH = 1480; // was 1280; updated to reflect current CSS
+    const DESIGN_HEIGHT = 800;
+
+    const rescale = () => {
+        // Contain the composition but never scale above 1 (no zoom-in on large screens)
+        const raw = Math.min(window.innerWidth / DESIGN_WIDTH, window.innerHeight / DESIGN_HEIGHT);
+        const scale = Math.min(raw, 1);
+        stage.style.transform = `scale(${scale})`;
+    };
+
+    window.addEventListener('resize', rescale);
+    rescale();
 }
 
 // Set up click interactions for all shapes
