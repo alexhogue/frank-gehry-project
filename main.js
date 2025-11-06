@@ -19,11 +19,24 @@ window.addEventListener('load', () => {
     setupStageScaling();
 });
 
+// Removal order tracking
+let removalOrder = [
+    'dark-red-trapezoid',
+    'main-orange-triangle',
+    'dark-green-quarter-circle',
+    'bright-blue-rectangle',
+    'orange-polygon',
+    'red-triangle',
+    'green-square'
+];
+let currentRemovalIndex = 0;
+
 // Initialize the interactive art piece
 function initializeArtPiece() {
     setupShapeInteractions();
     setupKeyboardControls();
     setupResetFunctionality();
+    setupBackgroundShapeDragging();
 }
 
 // Capture current layout and convert to pixel-based absolute positioning within the stage
@@ -80,7 +93,14 @@ function setupShapeInteractions() {
     shapes.forEach(shape => {
         // Add click event listener
         shape.addEventListener('click', function() {
-            moveShapeOut(this);
+            // Check if this shape is next in the removal order
+            const shapeClass = Array.from(this.classList).find(cls => removalOrder.includes(cls));
+            if (shapeClass && removalOrder.indexOf(shapeClass) === currentRemovalIndex) {
+                moveShapeOut(this);
+                // Move to next shape in order
+                currentRemovalIndex++;
+            }
+            // If not the right shape, do nothing (no visual feedback)
         });
         
         // Add keyboard support for accessibility
@@ -88,7 +108,12 @@ function setupShapeInteractions() {
         shape.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
-                moveShapeOut(this);
+                // Check if this shape is next in the removal order
+                const shapeClass = Array.from(this.classList).find(cls => removalOrder.includes(cls));
+                if (shapeClass && removalOrder.indexOf(shapeClass) === currentRemovalIndex) {
+                    moveShapeOut(this);
+                    currentRemovalIndex++;
+                }
             }
         });
         
@@ -185,6 +210,9 @@ function resetAllShapes() {
         shape.style.transform = shape.style.transform.replace(' scale(1.05)', '');
     });
     
+    // Reset removal order
+    currentRemovalIndex = 0;
+    
     console.log('All shapes reset to original positions');
 }
 
@@ -275,6 +303,141 @@ function moveShapeOut(shape) {
     setTimeout(() => {
         shape.style.pointerEvents = 'none';
     }, 800);
+}
+
+// Set up dragging for background shapes
+function setupBackgroundShapeDragging() {
+    const backgroundShapes = document.querySelectorAll('.background-shape');
+    let draggedElement = null;
+    let offset = { x: 0, y: 0 };
+    let isDragging = false;
+    let maxZIndex = 2; // Start at 2 (above default 1, below interactive shapes at 10)
+
+    backgroundShapes.forEach(shape => {
+        // Enable pointer events for dragging
+        shape.style.pointerEvents = 'auto';
+        shape.style.cursor = 'move';
+
+        shape.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            isDragging = true;
+            draggedElement = this;
+            
+            // Get the current computed position
+            const computedStyle = window.getComputedStyle(this);
+            const currentLeft = parseFloat(computedStyle.left) || 0;
+            const currentTop = parseFloat(computedStyle.top) || 0;
+            
+            const stage = document.getElementById('composition-stage');
+            const stageRect = stage.getBoundingClientRect();
+            
+            // Calculate offset from mouse position to element's current position
+            offset.x = e.clientX - stageRect.left - currentLeft;
+            offset.y = e.clientY - stageRect.top - currentTop;
+            
+            // Add dragging class for visual feedback
+            this.style.opacity = '0.7';
+            this.style.zIndex = '100';
+        });
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        if (!isDragging || !draggedElement) return;
+        
+        e.preventDefault();
+        
+        const stage = document.getElementById('composition-stage');
+        const stageRect = stage.getBoundingClientRect();
+        
+        // Calculate new position relative to the stage
+        const newLeft = e.clientX - stageRect.left - offset.x;
+        const newTop = e.clientY - stageRect.top - offset.y;
+        
+        // Update element position
+        draggedElement.style.left = newLeft + 'px';
+        draggedElement.style.top = newTop + 'px';
+    });
+
+    document.addEventListener('mouseup', function(e) {
+        if (isDragging && draggedElement) {
+            // Increment z-index counter and keep shape on top
+            maxZIndex++;
+            // Keep it below interactive shapes (z-index 10) but above other background shapes
+            if (maxZIndex >= 10) {
+                maxZIndex = 2; // Reset if we reach the limit
+            }
+            
+            // Reset visual feedback but keep elevated z-index
+            draggedElement.style.opacity = '0.85';
+            draggedElement.style.zIndex = maxZIndex.toString();
+            
+            draggedElement = null;
+            isDragging = false;
+        }
+    });
+
+    // Also handle touch events for mobile
+    backgroundShapes.forEach(shape => {
+        shape.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const touch = e.touches[0];
+            isDragging = true;
+            draggedElement = this;
+            
+            // Get the current computed position
+            const computedStyle = window.getComputedStyle(this);
+            const currentLeft = parseFloat(computedStyle.left) || 0;
+            const currentTop = parseFloat(computedStyle.top) || 0;
+            
+            const stage = document.getElementById('composition-stage');
+            const stageRect = stage.getBoundingClientRect();
+            
+            // Calculate offset from touch position to element's current position
+            offset.x = touch.clientX - stageRect.left - currentLeft;
+            offset.y = touch.clientY - stageRect.top - currentTop;
+            
+            this.style.opacity = '0.7';
+            this.style.zIndex = '100';
+        });
+    });
+
+    document.addEventListener('touchmove', function(e) {
+        if (!isDragging || !draggedElement) return;
+        
+        e.preventDefault();
+        
+        const touch = e.touches[0];
+        const stage = document.getElementById('composition-stage');
+        const stageRect = stage.getBoundingClientRect();
+        
+        const newLeft = touch.clientX - stageRect.left - offset.x;
+        const newTop = touch.clientY - stageRect.top - offset.y;
+        
+        draggedElement.style.left = newLeft + 'px';
+        draggedElement.style.top = newTop + 'px';
+    });
+
+    document.addEventListener('touchend', function(e) {
+        if (isDragging && draggedElement) {
+            // Increment z-index counter and keep shape on top
+            maxZIndex++;
+            // Keep it below interactive shapes (z-index 10) but above other background shapes
+            if (maxZIndex >= 10) {
+                maxZIndex = 2; // Reset if we reach the limit
+            }
+            
+            // Reset visual feedback but keep elevated z-index
+            draggedElement.style.opacity = '0.85';
+            draggedElement.style.zIndex = maxZIndex.toString();
+            
+            draggedElement = null;
+            isDragging = false;
+        }
+    });
 }
 
 // Export functions for potential module use
