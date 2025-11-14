@@ -1,22 +1,72 @@
 // Frank Gehry Digital Art Piece - Interactive JavaScript
 
+// Track if positions have been frozen to prevent double-freezing
+let positionsFrozen = false;
+
+// Wait for all images to load before freezing positions
+function waitForImages(callback) {
+    const images = document.querySelectorAll('img');
+    let loadedCount = 0;
+    const totalImages = images.length;
+    
+    if (totalImages === 0) {
+        callback();
+        return;
+    }
+    
+    const checkComplete = () => {
+        loadedCount++;
+        if (loadedCount === totalImages) {
+            // Small delay to ensure layout has settled after images load
+            setTimeout(callback, 50);
+        }
+    };
+    
+    images.forEach(img => {
+        if (img.complete && img.naturalHeight !== 0) {
+            // Image already loaded
+            checkComplete();
+        } else {
+            // Wait for image to load
+            img.addEventListener('load', checkComplete);
+            img.addEventListener('error', checkComplete); // Count errors as "loaded" to not block forever
+        }
+    });
+}
+
 // Wait for DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Frank Gehry Digital Art Piece loaded successfully!');
     
     // Initialize the interactive art piece
     initializeArtPiece();
-    // Freeze positions to pixel values and set up scaling after layout
-    setTimeout(() => {
+    // Freeze positions to pixel values and set up scaling after images load
+    waitForImages(() => {
         freezeCompositionPositions();
         setupStageScaling();
-    }, 0);
+    });
+    
+    // Hide instructions area after 6 seconds with smooth fade-out
+    setTimeout(() => {
+        const instructionsArea = document.getElementById('instructions-area');
+        if (instructionsArea) {
+            // Start fade-out transition
+            instructionsArea.style.opacity = '0';
+            // Hide completely after transition completes (0.8s)
+            setTimeout(() => {
+                // instructionsArea.style.display = 'none';
+                instructionsArea.style.opacity = "0";
+            }, 800);
+        }
+    }, 6000);
 });
 
 // Also ensure everything is finalized after images/fonts load
 window.addEventListener('load', () => {
-    freezeCompositionPositions();
-    setupStageScaling();
+    waitForImages(() => {
+        freezeCompositionPositions();
+        setupStageScaling();
+    });
 });
 
 // Removal order tracking
@@ -37,10 +87,23 @@ function initializeArtPiece() {
     setupKeyboardControls();
     setupResetFunctionality();
     setupBackgroundShapeDragging();
+    setupTitleClick();
+}
+
+// Set up title click to reset
+function setupTitleClick() {
+    const title = document.getElementById('title');
+    if (title) {
+        title.style.cursor = 'pointer';
+        title.addEventListener('click', resetAllShapes);
+    }
 }
 
 // Capture current layout and convert to pixel-based absolute positioning within the stage
 function freezeCompositionPositions() {
+    // Prevent double-freezing
+    if (positionsFrozen) return;
+    
     const stage = document.querySelector('.art-container');
     if (!stage) return;
     const base = stage.getBoundingClientRect();
@@ -65,6 +128,8 @@ function freezeCompositionPositions() {
     // Don't freeze images - let them use their CSS-defined positions
     // Images are already positioned absolutely relative to their parent shapes via CSS
     // The freeze function would break this relationship, especially with rotated shapes
+    
+    positionsFrozen = true;
 }
 
 // Scale the fixed-size stage to fit the current viewport while preserving aspect ratio
@@ -91,6 +156,14 @@ function setupShapeInteractions() {
     const shapes = document.querySelectorAll('.shape');
     
     shapes.forEach(shape => {
+        // Store original CSS transform on initialization
+        if (!shape.dataset.originalTransform) {
+            const computedStyle = window.getComputedStyle(shape);
+            // Try to get the transform from the stylesheet, or use computed
+            // For now, we'll work with what we have - store that this shape has a CSS transform
+            shape.dataset.hasCssTransform = computedStyle.transform !== 'none';
+            // We'll read the actual CSS transform value when needed
+        }
         // Add click event listener
         shape.addEventListener('click', function() {
             // Check if this shape is next in the removal order
@@ -99,6 +172,12 @@ function setupShapeInteractions() {
                 moveShapeOut(this);
                 // Move to next shape in order
                 currentRemovalIndex++;
+                // Check if all shapes are removed
+                if (currentRemovalIndex >= removalOrder.length) {
+                    showArchitectTitle();
+                }
+                // Update which shape can expand (next shape in order)
+                updateExpandableShape();
             }
             // If not the right shape, do nothing (no visual feedback)
         });
@@ -113,18 +192,118 @@ function setupShapeInteractions() {
                 if (shapeClass && removalOrder.indexOf(shapeClass) === currentRemovalIndex) {
                     moveShapeOut(this);
                     currentRemovalIndex++;
+                    // Check if all shapes are removed
+                    if (currentRemovalIndex >= removalOrder.length) {
+                        showArchitectTitle();
+                    }
+                    // Update which shape can expand
+                    updateExpandableShape();
                 }
             }
         });
         
-        // Add hover effects
+        // Store original transform on first hover
+        if (!shape.dataset.originalTransform) {
+            // Get original CSS transform from stylesheet
+            const sheets = document.styleSheets;
+            for (let sheet of sheets) {
+                try {
+                    const rules = sheet.cssRules || sheet.rules;
+                    for (let rule of rules) {
+                        if (rule.selectorText && shape.matches(rule.selectorText)) {
+                            const transformValue = rule.style.transform;
+                            if (transformValue) {
+                                shape.dataset.originalTransform = transformValue;
+                                break;
+                            }
+                        }
+                    }
+                } catch (e) {
+                    // Cross-origin stylesheet, skip
+                }
+            }
+        }
+        
+        // Add hover effect - all shapes rotate, only top shape expands
         shape.addEventListener('mouseenter', function() {
-            this.style.transform = this.style.transform + ' scale(1.05)';
+            // Check if this is the next shape in removal order
+            const shapeClass = Array.from(this.classList).find(cls => removalOrder.includes(cls));
+            const isNextShape = shapeClass && removalOrder.indexOf(shapeClass) === currentRemovalIndex;
+            
+            // Get original transform
+            let originalTransform = this.dataset.originalTransform || '';
+            
+            // If we don't have it stored yet, try to get it now
+            if (!originalTransform) {
+                const sheets = document.styleSheets;
+                for (let sheet of sheets) {
+                    try {
+                        const rules = sheet.cssRules || sheet.rules;
+                        for (let rule of rules) {
+                            if (rule.selectorText && this.matches(rule.selectorText)) {
+                                const transformValue = rule.style.transform;
+                                if (transformValue) {
+                                    this.dataset.originalTransform = transformValue;
+                                    originalTransform = transformValue;
+                                    break;
+                                }
+                            }
+                        }
+                    } catch (e) {
+                        // Cross-origin stylesheet, skip
+                    }
+                }
+            }
+            
+            // Build the hover transform: rotate to 0deg (into place) + scale if top shape
+            let hoverTransform = 'rotate(0deg)';
+            
+            if (isNextShape) {
+                // Top shape also expands
+                hoverTransform += ' scale(1.05)';
+            }
+            
+            this.style.transform = hoverTransform;
         });
         
         shape.addEventListener('mouseleave', function() {
-            this.style.transform = this.style.transform.replace(' scale(1.05)', '');
+            // Keep rotation at 0deg, only remove scale if it was applied
+            const currentTransform = this.style.transform || '';
+            if (currentTransform.includes('scale(1.05)')) {
+                // Remove scale but keep rotation at 0deg
+                this.style.transform = 'rotate(0deg)';
+            }
+            // If no scale was applied, transform stays as rotate(0deg) - no change needed
         });
+    });
+    
+    // Initial update of which shape can expand
+    updateExpandableShape();
+}
+
+// Update which shape can expand on hover
+// This function ensures any lingering scale transforms are removed from shapes that are no longer next
+function updateExpandableShape() {
+    const shapes = document.querySelectorAll('.shape');
+    
+    shapes.forEach(shape => {
+        // Check if this shape is still the next one
+        const shapeClass = Array.from(shape.classList).find(cls => removalOrder.includes(cls));
+        const isNextShape = shapeClass && removalOrder.indexOf(shapeClass) === currentRemovalIndex;
+        
+        // If this shape is no longer the next one, remove any scale transform but keep rotation
+        if (!isNextShape) {
+            const currentTransform = shape.style.transform || '';
+            if (currentTransform.includes('scale(1.05)')) {
+                // Remove scale but preserve rotation (should be rotate(0deg) if shape was hovered)
+                if (currentTransform.includes('rotate(0deg)')) {
+                    shape.style.transform = 'rotate(0deg)';
+                } else {
+                    const withoutScale = currentTransform.replace(/\s*scale\(1\.05\)/g, '').trim();
+                    shape.style.transform = withoutScale || '';
+                }
+            }
+        }
     });
 }
 
@@ -207,13 +386,58 @@ function resetAllShapes() {
     shapes.forEach(shape => {
         shape.classList.remove('moved-out');
         shape.style.pointerEvents = 'auto';
-        shape.style.transform = shape.style.transform.replace(' scale(1.05)', '');
+        // Restore original transform (rotation)
+        const originalTransform = shape.dataset.originalTransform || '';
+        if (originalTransform) {
+            shape.style.transform = originalTransform;
+        } else {
+            // Clear inline style to restore CSS transform
+            shape.style.transform = '';
+        }
     });
     
     // Reset removal order
     currentRemovalIndex = 0;
     
+    // Hide the architect title
+    hideArchitectTitle();
+    
+    // Update which shape can expand
+    updateExpandableShape();
+    
     console.log('All shapes reset to original positions');
+}
+
+// Show the architect title when all shapes are removed
+function showArchitectTitle() {
+    let titleElement = document.getElementById('architect-title');
+    if (!titleElement) {
+        // Create the title element
+        titleElement = document.createElement('h1');
+        titleElement.id = 'architect-title';
+        titleElement.textContent = 'Now you can be the architect. Fit the pieces together.';
+        titleElement.className = 'architect-title';
+        
+        // Find the first background shape and insert title before it
+        const firstBackgroundShape = document.querySelector('.background-shape');
+        const artContainer = document.querySelector('.art-container');
+        
+        if (firstBackgroundShape && artContainer) {
+            artContainer.insertBefore(titleElement, firstBackgroundShape);
+        } else if (artContainer) {
+            artContainer.appendChild(titleElement);
+        }
+    }
+    titleElement.style.display = 'block';
+    titleElement.style.zIndex = 2;
+}
+
+// Hide the architect title
+function hideArchitectTitle() {
+    const titleElement = document.getElementById('architect-title');
+    if (titleElement) {
+        titleElement.style.display = 'none';
+    }
 }
 
 // Play a subtle click sound (optional)
@@ -339,8 +563,13 @@ function setupBackgroundShapeDragging() {
             
             // Add dragging class for visual feedback
             this.style.opacity = '0.7';
-            this.style.zIndex = '100';
+            shape.style.zIndex = 1000;
+        
         });
+
+        shape.addEventListener("click", () => {
+            shape.style.zIndex = zIndex + 1;
+        })
     });
 
     document.addEventListener('mousemove', function(e) {

@@ -58,15 +58,15 @@ img {
 #frank-g {
     width: 450px;
     height: auto;
-    top: 648px;
-    left: 487px;
+    top: 566px;
+    left: 552px;
 }
 
 #ehry {
     width: 210px;
     height: auto;
     top: 360px;
-    left: 65px;
+    left: 60px;
 }
 
 .main-text {
@@ -125,15 +125,13 @@ img {
   z-index: 0;
 }
 
-.shape:hover {
-  transform: scale(1.05);
-}
+/* Scale effect only for top shape - handled via JavaScript to combine with existing transforms */
 
 /* Dark Red Trapezoid */
 .dark-red-trapezoid {
   color: #8b0000;
   width: 800px;
-  height: 900px;
+  height: 940px;
   bottom: 0vh;
   right: 2vw;
   transform: rotate(-185deg);
@@ -177,20 +175,20 @@ img {
 #sketch1-p1{
     width: 400px;
     height: auto;
-    left: 348px;
-    top: 432px;
+    left: 380px;
+    top: 515px;
 }
 #sketch-desc1{
-    width: 300px;
+    width: 350px;
     height: auto;
-    top: 755px;
-    left: 200px;
+    top: 750px;
+    left: 170px;
 }
 #sketch-desc2{
-    width: 300px;
+    width: 340px;
     height: auto;
     top: 670px;
-    left: 360px;
+    left: 340px;
 }
 
 
@@ -198,7 +196,7 @@ img {
 .orange-polygon {
   color: #ff6600;
   opacity: 0.9;
-  width: 760px;
+  width: 880px;
   height: 880px;
   top: 0;
   right: 0;
@@ -208,95 +206,95 @@ img {
 /* Dark Green Quarter Circle */
 .dark-green-quarter-circle {
   color: #006600;
-  width: 800px;
-  height: 640px;
+  width: 840px;
+  height: 880px;
   border-width: 4px;
   stroke-width: 4px;
   stroke: #006600;
-  bottom: 0;
+  bottom: 0px;
   opacity: 0.9;
-  right: 0;
+  right: 0px;
   border-radius: 100% 0 0 0;
 }
 #sketch1-p2{
     width: 300px;
     height: auto;
-    top: 504px;
-    left: 45px;
+    top: 614px;
+    left: 65px;
 }
 
 #sketch2-p1{
     width: 310px;
     height: auto;
     top: 715px;
-    left: 305px;
+    left: 432px;
 }
 #sketch2-p2{
     width: 250px;
     height: auto;
-    top: 804px;
+    top: 846px;
     left: 0px;
 }
 
 #f4{
     width: 55px;
     height: auto;
-    left: 424px;
-    top: 603px;
+    left: 300px;
+    top: 640px;
 }
 
 #f3{
     width: 30px;
     height: auto;
-    left: 854px;
+    left: 856px;
     top: 550px;
 }
 
 #f2{
-    width: 80px;
+    width: 94px;
     height: auto;
-    left: 336px;
-    top: 285px;
+    left: 308px;
+    top: 390px;
 }
 
 #f1{
     width: 65px;
     height: auto;
-    left: 1085px;
+    left: 1080px;
     top: 400px;
 }
 
 #w1{
-    width: 150px;
+    width: 170px;
     height: auto;
-    left: 749px;
-    top: 770px;
+    left: 739px;
+    top: 766px;
 }
 #w2{
-    width: 160px;
+    width: 170px;
     height: auto;
-    left: 184px;
-    top: 480px;
+    left: 178px;
+    top: 474px;
 }
 
 #text1 {
     width: 400px;
     height: auto;
-    left: 270px;
-    top: 418px;
+    left: 250px;
+    top: 550px;
 }
 
 #text2 {
     width: 350px;
     height: auto;
-    left: 460px;
-    top: 738px;
+    left: 350px;
+    top: 778px;
 }
 #text3 {
     width: 350px;
     height: auto;
     left: 280px;
-    top: 640px;
+    top: 644px;
 }
 
 /* Small Blue Diamond */
@@ -304,7 +302,7 @@ img {
   color: #ff6600;
   width: 820px;
   height: 900px;
-  bottom: -80px;
+  bottom: 0px;
   left: -120px;
   clip-path: polygon(100% 18%, 0 70%, 68% 100%);
 }
@@ -322,8 +320,8 @@ img {
 
 .green-square {
   color: #006600;
-  width: 520px;
-  height: 660px;
+  width: 580px;
+  height: 730px;
   bottom: 0vh;
   left: 30vw;
   transform: rotate(30deg);
@@ -348,7 +346,7 @@ img {
 
 .orange-trapezoid {
   color: #ff6600;
-  width: 600px;
+  width: 700px;
   height: 600px;
   bottom: 5vh;
   right: 15vw;
@@ -581,4 +579,157 @@ img {
 .shape:focus {
   outline: 3px solid #ffd700;
   outline-offset: 2px;
+}
+
+/* Architect title - appears when all shapes are removed */
+.architect-title {
+  position: absolute;
+  top: 1vh;
+  left: 1vw;
+  font-family: 'Futura', 'Futura-Medium', 'Futura Medium', 'Century Gothic', 'CenturyGothic', 'AppleGothic', sans-serif;
+  font-size: 1vw;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  z-index: 100;
+  display: none;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+#instructions-area {
+    position: fixed;
+    top:130px;
+    left:10px;
+    z-index: 20000;
+    color: rgb(196, 196, 196);
+    opacity: 1;
+    transition: opacity 0.8s ease-out;
+    pointer-events: auto;
+}
+
+#instructions-area:hover {
+    opacity: 1 !important;
+    transition: opacity 0.8s ease-out;
+}
+
+#if1{
+  transform: rotate(15deg) scale(0.7);
+  top: 80px;
+  left: 130px;
+}
+
+
+#if2{
+  transform: rotate(-30deg);
+  top: 20px;
+  left: -43px;
+}
+
+#text4{
+  transform: rotate(-30deg) scale(0.8);
+  top: 48px;
+  left: 60px;
+}
+
+#he1 {
+  transform: rotate(-15deg) scale(0.5);
+  top: 0px;
+  left:0px;
+
+}
+
+#he2 {
+  transform: rotate(30deg) scale(0.58);
+  top: -40px;
+  left:-13px;
+}
+
+#text5 {
+  transform: rotate(30deg) scale(0.72);
+  top: 220px;
+  left: 82px;
+}
+
+#in1 {
+  transform: rotate(-26deg) scale(0.75);
+  top: 100px;
+  left: 42px;
+}
+#in2 {
+  transform: rotate(10deg) scale(0.44);
+  top: 0px;
+  left: -32px;
+}
+#text6 {
+  transform: rotate(10deg) scale(0.78);
+  top: 245px;
+  left: 60px;
+}
+
+#back-sketch1{
+  transform: scale(1.18);
+  left: 32px;
+  top:82px;
+}
+#back-sketch2{
+  transform: rotate(-38deg) scale(2);
+  left: 30px;
+  top:200px;
+}
+
+#back-sketch3{
+  transform: rotate(-15deg) scale(1.35);
+  left: 52px;
+  top:40px;
+}
+#back-sketch4{
+  transform: rotate(20deg) scale(1.48);
+  left: 66px;
+  top:43px;
+}
+
+#back-sketch5{
+  transform: rotate(-30deg) scale(1.14);
+  left: 30px;
+  top:40px;
+}
+#back-sketch6{
+  transform: rotate(-50deg) scale(1.02);
+  left: -36px;
+  top:43px;
+}
+
+#back-sketch7{
+  transform: rotate(-40deg) scale(1.1);
+  left: 37px;
+  top:8px;
+}
+#back-sketch8{
+  transform: rotate(-10deg) scale(.86);
+  left: 36px;
+  top:63px;
+}
+
+#but1{
+  transform: rotate(30deg) scale(.8);
+  left: 40px;
+  top:160px;
+}
+#but2{
+  transform: rotate(25deg) scale(.6);
+  left: -41px;
+  top:-25px;
+}
+#text7{
+  transform: rotate(25deg) scale(1.45);
+  top: 208px;
+  left: 85px;
+}
+
+#title {
+  position: relative;
+  z-index: 200000;
+  color: white;
+  font-size: 48px;
 }
