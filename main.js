@@ -402,6 +402,12 @@ function resetAllShapes() {
     // Hide the architect title
     hideArchitectTitle();
     
+    // Re-enable hover effect on instructions area
+    const instructionsArea = document.getElementById('instructions-area');
+    if (instructionsArea) {
+        instructionsArea.classList.remove('no-hover');
+    }
+    
     // Update which shape can expand
     updateExpandableShape();
     
@@ -430,6 +436,12 @@ function showArchitectTitle() {
     }
     titleElement.style.display = 'block';
     titleElement.style.zIndex = 2;
+    
+    // Disable hover effect on instructions area when all shapes are removed
+    const instructionsArea = document.getElementById('instructions-area');
+    if (instructionsArea) {
+        instructionsArea.classList.add('no-hover');
+    }
 }
 
 // Hide the architect title
@@ -535,7 +547,52 @@ function setupBackgroundShapeDragging() {
     let draggedElement = null;
     let offset = { x: 0, y: 0 };
     let isDragging = false;
-    let maxZIndex = 2; // Start at 2 (above default 1, below interactive shapes at 10)
+    let hasMoved = false; // Track if mouse moved during drag
+
+    // Function to bring a shape to the front
+    const bringToFront = (shape) => {
+        // Find the current maximum z-index among all background shapes
+        let currentMax = 1; // Start with default z-index from CSS
+        backgroundShapes.forEach(bgShape => {
+            // Check both inline style (most recent) and computed style
+            const inlineZIndex = bgShape.style.zIndex ? parseInt(bgShape.style.zIndex) : null;
+            const computedZIndex = parseInt(window.getComputedStyle(bgShape).zIndex) || 1;
+            // Use the higher of the two, but only if it's below interactive shapes (z-index 10+)
+            const effectiveZIndex = inlineZIndex !== null ? inlineZIndex : computedZIndex;
+            
+            if (effectiveZIndex > currentMax && effectiveZIndex < 10) {
+                currentMax = effectiveZIndex;
+            }
+        });
+        
+        // Set the new z-index to be one higher than the current maximum
+        // Keep it below interactive shapes (z-index 10) but above other background shapes
+        let newZIndex = currentMax + 1;
+        
+        // If we've reached the limit (9), find the minimum z-index and set to min + 1
+        // If that would still be >= 10, reset to 2
+        if (newZIndex >= 10) {
+            let minZIndex = 9;
+            backgroundShapes.forEach(bgShape => {
+                const inlineZIndex = bgShape.style.zIndex ? parseInt(bgShape.style.zIndex) : null;
+                const computedZIndex = parseInt(window.getComputedStyle(bgShape).zIndex) || 1;
+                const effectiveZIndex = inlineZIndex !== null ? inlineZIndex : computedZIndex;
+                
+                if (effectiveZIndex >= 2 && effectiveZIndex < minZIndex) {
+                    minZIndex = effectiveZIndex;
+                }
+            });
+            newZIndex = minZIndex + 1;
+            // If we still can't fit it below 10, just set to 2 (will be behind some, but that's okay for cycling)
+            if (newZIndex >= 10) {
+                newZIndex = 2;
+            }
+        }
+        
+        shape.style.zIndex = newZIndex.toString();
+    };
+    
+    console.log(`Found ${backgroundShapes.length} background shapes to make draggable`);
 
     backgroundShapes.forEach(shape => {
         // Enable pointer events for dragging
@@ -547,6 +604,7 @@ function setupBackgroundShapeDragging() {
             e.stopPropagation();
             
             isDragging = true;
+            hasMoved = false;
             draggedElement = this;
             
             // Get the current computed position
@@ -563,19 +621,23 @@ function setupBackgroundShapeDragging() {
             
             // Add dragging class for visual feedback
             this.style.opacity = '0.7';
-            shape.style.zIndex = 1000;
-        
+            // Bring to front immediately when interaction starts
+            bringToFront(this);
         });
 
-        shape.addEventListener("click", () => {
-            shape.style.zIndex = zIndex + 1;
-        })
+        // Handle clicks (when not dragging - just a click without movement)
+        // Note: bringToFront is already called on mousedown, so we don't need to call it here
+        // This click handler is kept for potential future use
+        shape.addEventListener('click', function(e) {
+            // Click handling - bringToFront already called on mousedown
+        });
     });
 
     document.addEventListener('mousemove', function(e) {
         if (!isDragging || !draggedElement) return;
         
         e.preventDefault();
+        hasMoved = true; // Mark that mouse has moved
         
         const stage = document.getElementById('composition-stage');
         const stageRect = stage.getBoundingClientRect();
@@ -591,19 +653,12 @@ function setupBackgroundShapeDragging() {
 
     document.addEventListener('mouseup', function(e) {
         if (isDragging && draggedElement) {
-            // Increment z-index counter and keep shape on top
-            maxZIndex++;
-            // Keep it below interactive shapes (z-index 10) but above other background shapes
-            if (maxZIndex >= 10) {
-                maxZIndex = 2; // Reset if we reach the limit
-            }
-            
-            // Reset visual feedback but keep elevated z-index
+            // Reset visual feedback (bringToFront already called on mousedown)
             draggedElement.style.opacity = '0.85';
-            draggedElement.style.zIndex = maxZIndex.toString();
             
             draggedElement = null;
             isDragging = false;
+            hasMoved = false;
         }
     });
 
@@ -615,6 +670,7 @@ function setupBackgroundShapeDragging() {
             
             const touch = e.touches[0];
             isDragging = true;
+            hasMoved = false;
             draggedElement = this;
             
             // Get the current computed position
@@ -630,7 +686,8 @@ function setupBackgroundShapeDragging() {
             offset.y = touch.clientY - stageRect.top - currentTop;
             
             this.style.opacity = '0.7';
-            this.style.zIndex = '100';
+            // Bring to front while dragging
+            bringToFront(this);
         });
     });
 
@@ -638,6 +695,7 @@ function setupBackgroundShapeDragging() {
         if (!isDragging || !draggedElement) return;
         
         e.preventDefault();
+        hasMoved = true; // Mark that touch has moved
         
         const touch = e.touches[0];
         const stage = document.getElementById('composition-stage');
@@ -652,19 +710,12 @@ function setupBackgroundShapeDragging() {
 
     document.addEventListener('touchend', function(e) {
         if (isDragging && draggedElement) {
-            // Increment z-index counter and keep shape on top
-            maxZIndex++;
-            // Keep it below interactive shapes (z-index 10) but above other background shapes
-            if (maxZIndex >= 10) {
-                maxZIndex = 2; // Reset if we reach the limit
-            }
-            
-            // Reset visual feedback but keep elevated z-index
+            // Reset visual feedback (bringToFront already called on touchstart)
             draggedElement.style.opacity = '0.85';
-            draggedElement.style.zIndex = maxZIndex.toString();
             
             draggedElement = null;
             isDragging = false;
+            hasMoved = false;
         }
     });
 }
